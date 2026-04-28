@@ -1,5 +1,4 @@
 import type { CustomCellRendererProps } from "ag-grid-react";
-
 const TAG_COLORS = [
   {
     bg: "rgba(99,102,241,0.15)",
@@ -17,22 +16,24 @@ const TAG_COLORS = [
     text: "#fbbf24",
   },
 ];
-
 export const SkillsCell = ({ value }: CustomCellRendererProps) => {
   const skills: string[] = Array.isArray(value) ? value : [];
 
   return (
     <div
+      title={skills.join(", ")}
       style={{
         display: "flex",
         gap: 4,
-        flexWrap: "nowrap",
+        flexWrap: "wrap",
         alignItems: "center",
         overflow: "hidden",
+        cursor: "help",
       }}
     >
       {skills.slice(0, 2).map((skill, i) => {
         const c = TAG_COLORS[i % TAG_COLORS.length];
+
         return (
           <span
             key={skill}
@@ -41,19 +42,25 @@ export const SkillsCell = ({ value }: CustomCellRendererProps) => {
               borderRadius: 4,
               fontSize: 10,
               fontWeight: 600,
-              letterSpacing: "0.02em",
               background: c.bg,
               border: `1px solid ${c.border}`,
               color: c.text,
-              whiteSpace: "nowrap",
             }}
           >
             {skill}
           </span>
         );
       })}
+
       {skills.length > 2 && (
-        <span style={{ fontSize: 10, color: "#6b7280", fontWeight: 500 }}>
+        <span
+          title={skills.join(", ")}
+          style={{
+            fontSize: 10,
+            color: "#6b7280",
+            fontWeight: 500,
+          }}
+        >
           +{skills.length - 2}
         </span>
       )}

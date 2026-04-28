@@ -1,7 +1,13 @@
 import type { CustomCellRendererProps } from "ag-grid-react";
 
-export const StatusCell = ({ value }: CustomCellRendererProps) => {
-  const active = value === true;
+export const StatusCell = (params: CustomCellRendererProps) => {
+  // Hide status for pinned summary row
+  if (params.node?.rowPinned) {
+    return null;
+  }
+
+  const active = params.value === true;
+
   return (
     <span
       style={{
@@ -15,8 +21,12 @@ export const StatusCell = ({ value }: CustomCellRendererProps) => {
         letterSpacing: "0.04em",
         textTransform: "uppercase",
         background: active ? "rgba(34,197,94,0.12)" : "rgba(239,68,68,0.12)",
+
         color: active ? "#16a34a" : "#dc2626",
-        border: `1px solid ${active ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)"}`,
+
+        border: `1px solid ${
+          active ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)"
+        }`,
       }}
     >
       <span
@@ -28,6 +38,7 @@ export const StatusCell = ({ value }: CustomCellRendererProps) => {
           flexShrink: 0,
         }}
       />
+
       {active ? "Active" : "Inactive"}
     </span>
   );

@@ -1,73 +1,118 @@
-# React + TypeScript + Vite
+# Employee Workforce Analytics Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A scalable frontend analytics dashboard built using React, TypeScript, Vite, and AG Grid Community.
 
-Currently, two official plugins are available:
+Built as part of the FactWise Frontend Dashboard assessment.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Overview
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+This application visualizes employee data through interactive grid capabilities, grouped reporting, KPI summaries, and enterprise-inspired features implemented using AG Grid Community.
 
-## Expanding the ESLint configuration
+The solution is structured to demonstrate:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- AG Grid expertise  
+- Scalable frontend architecture  
+- Product-oriented UX decisions  
+- Practical engineering trade-offs  
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Features
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Grid Capabilities
+- Client-side AG Grid row model
+- Department-level row grouping
+- Salary and project aggregation
+- Sorting, filtering and quick search
+- Pagination
+- Multi-row selection
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Analytics
+- KPI summary cards
+- Total employee count
+- Active employee count
+- Average salary
+- Average performance rating
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Advanced Interactions
+- Saved views (persisted column/filter state)
+- Pinned summary row
+- CSV export
+- Column visibility chooser
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Custom Cell Renderers
+- Status chips
+- Performance progress bars
+- Skills tags + tooltips
+
+---
+
+## Architecture Decisions
+
+### Why Client-Side Row Model
+Chosen intentionally per assessment requirement while preserving a migration path toward Infinite or Server-Side Row Models for larger datasets.
+
+### Future Migration Path
+For larger datasets (50k+ rows), this could migrate to:
+
+- Infinite Row Model
+- Server-Side Row Model
+- Paginated API-backed data source
+
+without changing column definitions or renderers.
+
+### Why AG Grid Community
+Implemented advanced capabilities using Community edition while avoiding licensed-only Enterprise features.
+
+### Why Lightweight TypeScript
+Focused typing was used for:
+
+- Data models
+- Grid configuration
+- Renderer contracts
+
+while intentionally avoiding unnecessary abstraction.
+
+---
+
+## Trade-Offs
+
+Included:
+
+- Strong grid capabilities
+- Scalable structure
+- Enterprise-inspired UX patterns
+
+Intentionally excluded:
+
+- Backend APIs
+- Authentication
+- Charting libraries
+- Redux / over-engineered global state
+
+---
+
+## Tech Stack
+
+- React 19
+- TypeScript
+- Vite
+- AG Grid Community
+
+---
+
+## Folder Structure
+
+```bash
+src/
+ data/
+ types/
+
+ components/
+   dashboard/
+   grid/
+   renderers/
+
+ hooks/

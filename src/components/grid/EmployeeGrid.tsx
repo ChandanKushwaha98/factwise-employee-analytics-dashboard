@@ -106,7 +106,7 @@ export const EmployeeGrid = ({ employees, loading }: EmployeeGridProps) => {
           groupDisplayType="groupRows"
           groupDefaultExpanded={1}
           // Row selection
-          rowSelection={{ mode: "multiRow", checkboxes: true }}
+          // rowSelection={{ mode: "multiRow" }}
           // Pagination — keeps DOM count manageable as dataset grows
           pagination
           paginationPageSize={15}

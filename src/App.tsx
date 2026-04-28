@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
-import { employees as rawData } from "./data/employees";
-import type { Employee } from "./types/employee";
+import { useEffect, useState } from "react";
 import { EmployeeGrid } from "./components/grid/EmployeeGrid";
+import { MetricsCards } from "./components/grid/MetricsCards";
+import { employees as rawData } from "./data/employees";
 import "./index.css";
+import type { Employee } from "./types/employee";
 
 export default function App() {
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -54,6 +55,7 @@ export default function App() {
       </header>
 
       <main className="app-main">
+        {!loading && <MetricsCards employees={employees} />}
         {loading && (
           <div className="metrics-skeleton">
             {[1, 2, 3, 4].map((i) => (

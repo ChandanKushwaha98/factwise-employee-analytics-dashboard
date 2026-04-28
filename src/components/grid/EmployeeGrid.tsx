@@ -49,7 +49,14 @@ export const EmployeeGrid = ({ employees, loading }: EmployeeGridProps) => {
 
   const [quickFilter, setQuickFilter] = useState("");
 
+  const [isColumnFilterActive, setIsColumnFilterActive] = useState(false);
+
   const { saveView, loadView, clearView } = useGridState(gridApiRef);
+  const onClearFilters = () => {
+    if (gridApi) {
+      gridApi.setFilterModel(null); // This removes all active filters
+    }
+  };
 
   const onGridReady = useCallback((e: GridReadyEvent) => {
     gridApiRef.current = e.api;
@@ -59,6 +66,13 @@ export const EmployeeGrid = ({ employees, loading }: EmployeeGridProps) => {
 
     e.api.sizeColumnsToFit();
   }, []);
+
+  const onFilterChanged = useCallback(() => {
+    if (gridApi) {
+      const model = gridApi.getFilterModel();
+      setIsColumnFilterActive(Object.keys(model).length > 0);
+    }
+  }, [gridApi]);
 
   const handleExport = useCallback(() => {
     gridApiRef.current?.exportDataAsCsv({
@@ -76,6 +90,7 @@ export const EmployeeGrid = ({ employees, loading }: EmployeeGridProps) => {
 
   const columnDefs = getColumnDefs();
   const pinnedRow = buildPinnedRow(employees);
+  const showClearButton = isColumnFilterActive || quickFilter.length > 0;
 
   return (
     <div
@@ -95,6 +110,8 @@ export const EmployeeGrid = ({ employees, loading }: EmployeeGridProps) => {
         onExport={handleExport}
         gridApi={gridApi}
         columnDefs={columnDefs}
+        onClearFilters={onClearFilters}
+        showClearButton={showClearButton}
       />
 
       <div className="ag-theme-custom" style={{ flex: 1, minHeight: 0 }}>
@@ -102,6 +119,7 @@ export const EmployeeGrid = ({ employees, loading }: EmployeeGridProps) => {
           rowData={employees}
           columnDefs={columnDefs}
           onGridReady={onGridReady}
+          onFilterChanged={onFilterChanged}
           // Grouping
           groupDisplayType="groupRows"
           groupDefaultExpanded={1}

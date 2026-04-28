@@ -1,8 +1,8 @@
 import type { ColDef, ColGroupDef } from "ag-grid-community";
 import type { Employee } from "../../types/employee";
-import { StatusCell } from "../renderers/StatusCell";
 import { PerformanceCell } from "../renderers/PerformanceCell";
 import { SkillsCell } from "../renderers/SkillsCell";
+import { StatusCell } from "../renderers/StatusCell";
 
 // Formatter reused across salary fields
 const currencyFormatter = (value: number) =>
@@ -73,22 +73,54 @@ export const getColumnDefs = (): (
     type: "numericColumn",
   },
   {
-    field: "isActive",
+    field: "isActive", // Keep original boolean for filtering logic
     headerName: "Status",
+    // 1. Use valueGetter to convert boolean to string for the Grid's engine
+    valueGetter: (params) => (params.data?.isActive ? "Active" : "Inactive"),
+
+    // 2. Use your custom renderer for the visuals
     cellRenderer: StatusCell,
+
+    // 3. Configure the filter to look for "Active" or "Inactive" strings
     filter: "agTextColumnFilter",
     floatingFilter: true,
-    minWidth: 110,
-    // filterValueGetter maps boolean → string for text filter usability
-    filterValueGetter: (p) => (p.data?.isActive ? "Active" : "Inactive"),
+    filterParams: {
+      buttons: ["reset"],
+
+      filterOptions: [
+        {
+          displayKey: "activeOnly",
+          displayName: "Active",
+          predicate: (_: unknown, cellValue: string) => cellValue === "Active",
+          numberOfInputs: 0,
+        },
+        {
+          displayKey: "inactiveOnly",
+          displayName: "Inactive",
+          predicate: (_: unknown, cellValue: string) =>
+            cellValue === "Inactive",
+          numberOfInputs: 0,
+        },
+      ],
+      maxNumConditions: 1,
+    },
+
+    // 4. Critical for v31+: Disable automatic data type detection for this column
+    cellDataType: false,
   },
   {
-    field: "skills",
+    field: "skills", // Keeps params.value as the original array for your SkillsCell
     headerName: "Skills",
     cellRenderer: SkillsCell,
     sortable: false,
-    filter: false,
     minWidth: 200,
+    filter: "agTextColumnFilter",
+    floatingFilter: true,
+
+    // This ONLY affects the filter, not the cell rendering
+    filterValueGetter: (params) => {
+      return params.data?.skills ? params.data.skills.join(", ") : "";
+    },
   },
   {
     field: "hireDate",

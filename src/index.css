@@ -213,6 +213,11 @@ html, body, #root {
   color: var(--text-secondary);
   transition: border-color 0.15s;
 }
+.toolbar-left{
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
 
 .toolbar-search:focus-within {
   border-color: rgba(99,102,241,0.5);

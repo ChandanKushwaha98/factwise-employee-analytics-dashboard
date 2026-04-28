@@ -1,5 +1,9 @@
+import type { ColDef, ColGroupDef, GridApi } from "ag-grid-community";
 import { useState } from "react";
-import type { GridApi, ColDef, ColGroupDef } from "ag-grid-community";
+
+interface GridToolbarColumn extends ColDef {
+  field: string;
+}
 
 interface GridToolbarProps {
   quickFilter: string;
@@ -10,6 +14,8 @@ interface GridToolbarProps {
   onExport: () => void;
   gridApi: GridApi | null;
   columnDefs: (ColDef | ColGroupDef)[];
+  onClearFilters: () => void;
+  showClearButton: boolean;
 }
 
 export const GridToolbar = ({
@@ -21,13 +27,15 @@ export const GridToolbar = ({
   onExport,
   gridApi,
   columnDefs,
+  onClearFilters,
+  showClearButton,
 }: GridToolbarProps) => {
-  const [showChooser, setShowChooser] = useState(false);
-  const [showViewMenu, setShowViewMenu] = useState(false);
+  const [showChooser, setShowChooser] = useState<boolean>(false);
+  const [showViewMenu, setShowViewMenu] = useState<boolean>(false);
 
   // Extract leaf-level columns that have a field (group cols are skipped)
   const leafCols = columnDefs.filter(
-    (c): c is ColDef => "field" in c && typeof (c as ColDef).field === "string",
+    (c): c is GridToolbarColumn => "field" in c && typeof c.field === "string",
   );
 
   const toggleColumn = (field: string, visible: boolean) => {
@@ -40,34 +48,45 @@ export const GridToolbar = ({
   return (
     <div className="toolbar">
       {/* Quick Search */}
-      <div className="toolbar-search">
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-        >
-          <circle cx="11" cy="11" r="8" />
-          <path d="m21 21-4.35-4.35" />
-        </svg>
-        <input
-          type="text"
-          placeholder="Search employees..."
-          value={quickFilter}
-          onChange={(e) => onQuickFilterChange(e.target.value)}
-          className="toolbar-input"
-        />
-        {quickFilter && (
-          <button
-            className="btn-icon"
-            onClick={() => onQuickFilterChange("")}
-            title="Clear search"
+      <div className="toolbar-left">
+        <div className="toolbar-search">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
           >
-            ×
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+          <input
+            type="text"
+            placeholder="Search employees..."
+            value={quickFilter}
+            onChange={(e) => onQuickFilterChange(e.target.value)}
+            className="toolbar-input"
+          />
+          {quickFilter && (
+            <button
+              className="btn-icon"
+              onClick={() => onQuickFilterChange("")}
+              title="Clear search"
+            >
+              ×
+            </button>
+          )}
+        </div>
+        <div className="">
+          <button
+            onClick={onClearFilters}
+            className="btn-secondary"
+            style={{ visibility: showClearButton ? "visible" : "hidden" }}
+          >
+            Clear Filters
           </button>
-        )}
+        </div>
       </div>
 
       <div className="toolbar-actions">

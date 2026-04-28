@@ -2,11 +2,9 @@ import type { CustomCellRendererProps } from "ag-grid-react";
 
 export const StatusCell = (params: CustomCellRendererProps) => {
   // Hide status for pinned summary row
-  if (params.node?.rowPinned) {
-    return null;
-  }
+  if (params.node?.rowPinned || params.value == null) return null;
 
-  const active = params.value === true;
+  const active = params.value === "Active";
 
   return (
     <span
